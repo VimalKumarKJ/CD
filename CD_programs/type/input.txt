@@ -1,0 +1,8 @@
+flex lexer.l
+yacc -d parser.y
+cc lex.yy.c y.tab.c -o parser
+./parser
+int x;
+float y;
+x = 10;
+y = 3.14;
