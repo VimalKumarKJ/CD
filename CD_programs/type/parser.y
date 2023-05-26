@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 extern int yylex();
 extern char* yytext;
@@ -22,11 +23,11 @@ program : statement
         | program statement
         ;
 
-statement : declaration ';'
-          | IF '(' condition ')' '{' program '}' ELSE '{' program '}'
+statement : declaration ';' { printf("Declaration: %s\n", $<identifier>2); }
+          | IF '(' condition ')' '{' program '}' ELSE '{' program '}' { printf("If-Else statement\n"); }
           ;
 
-declaration : dataType variable
+declaration : dataType variable { printf("Variable declaration: %s\n", $<identifier>2); }
             ;
 
 dataType : INT
@@ -47,6 +48,14 @@ expression : NUMBER
            ;
 
 %%
+
+bool isValidDataType(const char* dataType) {
+    return strcmp(dataType, "INT") == 0 ||
+           strcmp(dataType, "FLOAT") == 0 ||
+           strcmp(dataType, "DOUBLE") == 0 ||
+           strcmp(dataType, "CHAR") == 0 ||
+           strcmp(dataType, "BOOL") == 0;
+}
 
 void yyerror(const char* message) {
     printf("Error: %s\n", message);
